@@ -33,7 +33,9 @@ MODULES = [  # code, title
 # instrument that cannot be left to memory, so it is now rendered on the consent screen itself.
 CONSENT_SCRIPT = """We are doing a study on the livelihoods of people who work on the Yatra route. I would like to ask you some questions about your work, your household and your spending.
 
-Taking part is your choice. You can stop at any time, and you can skip any question you do not want to answer. Nothing you tell me will be linked to your name, and nothing you say will affect your work here or any government benefit."""
+Taking part is your choice. You can stop at any time, and you can skip any question you do not want to answer. Nothing you tell me will be linked to your name, and nothing you say will affect your work here or any government benefit.
+
+If you say no, I will not ask you any questions. I will write down only that you said no, the date and time, where we met, and what I can see: whether you are a man or a woman, and roughly how old you are. Your name is not asked for, and no answers are recorded."""
 
 
 # The plain-language description of the study, shown on the landing screen before the consent
@@ -146,6 +148,10 @@ HINTS = {
 
 LSETS = {
     "yn": {0: "No", 1: "Yes"},
+    "obssex": {1: "Man", 2: "Woman"},
+    "obsage": {1: "Under 25", 2: "25 to 40", 3: "Over 40", 97: "Cannot tell"},
+    "obsset": {1: "On the route", 2: "At a worksite", 3: "At lodging or a camp", 4: "Somewhere else"},
+    "gpserr": {1: "Location not allowed in the browser", 2: "No fix obtained"},
     "cprwater": {1: "Yes, free to use", 2: "A source exists but we must pay", 3: "No source nearby", 97: "Don't know"},
     "cprgov": {1: "Village head or panchayat", 2: "Forest department", 3: "Local committee or community group", 4: "Nobody decides; it is open to all", 97: "Don't know"},
     "sex": {0: "Male", 1: "Female"},
@@ -481,6 +487,19 @@ R("P", "interview_date", "Interview date", "Recorded automatically.", "Date of i
 R("P", "gps_lat", "GPS latitude of interview", "Recorded automatically.", "Latitude of the interview location.", "num", origin="paradata", source="Design")
 R("P", "gps_lon", "GPS longitude of interview", "Recorded automatically.", "Longitude of the interview location.", "num", origin="paradata", source="Design")
 R("P", "consent", "Respondent gave informed consent", "Recorded from the landing screen's consent buttons.", "Consent given after the script was read.", "bin", "yn", origin="paradata", source="Design")
+
+# Refusals. A person who says no is still recorded, with only what the enumerator can see. Their
+# refusal is data: the people who decline are systematically different, and without a record of
+# them the interviewed sample cannot be corrected for who was missing (see the selection note in
+# do/02_build_final_dataset.do). Asked ONLY when consent = 0.
+R("P", "obs_sex", "Sex of the person approached (refusals only)", "Write down what you can see. Do not ask.", "Observed by the enumerator when consent is refused. Lets the refusals be compared with the people who took part.", "cat", "obssex", skip="Ask only if consent = 0", origin="paradata", source="Design: sample-selection record")
+R("P", "obs_age", "Rough age of the person approached (refusals only)", "Estimate it. Do not ask.", "Observed by the enumerator when consent is refused. A rough band is enough for a selection equation.", "cat", "obsage", skip="Ask only if consent = 0", origin="paradata", source="Design: sample-selection record")
+R("P", "obs_setting", "Where the person was approached (refusals only)", "Where were you when you approached them?", "Observed by the enumerator when consent is refused. Setting is the main variable that can explain who is approached and who declines.", "cat", "obsset", skip="Ask only if consent = 0", origin="paradata", source="Design: sample-selection record")
+R("P", "refusal_reason", "Reason for refusing, in their own words (refusals only, may be left blank)", "If they give a reason, write it down exactly as they say it. Do not press for one.", "Free text, optional. Recorded verbatim so the reasons can be coded later without re-asking anyone.", "text", skip="Ask only if consent = 0. May be left blank.", origin="paradata", source="Design: sample-selection record")
+# Precise location. Written by the tablet from the best GPS fix obtained, not from a coarse network fix.
+R("P", "gps_accuracy_m", "GPS accuracy of the location fix (metres)", "Recorded automatically.", "The accuracy the device reports for the fix that was kept. The form keeps refining the fix for up to 90 seconds and stops at 15 metres. A fix of 50 metres or worse is flagged in the export so it can be checked.", "num", origin="paradata", source="Design")
+R("P", "gps_fix_s", "Seconds taken to get the location fix", "Recorded automatically.", "How long the device took to produce the fix that was kept. A long fix is a sign of a weak signal.", "num", origin="paradata", source="Design")
+R("P", "gps_error", "Location problem, if no fix was obtained", "Recorded automatically.", "1 = the browser was not allowed to use location; 2 = no fix was obtained. Blank when a fix was obtained.", "cat", "gpserr", origin="paradata", source="Design")
 R("P", "interview_duration_min", "Interview length (minutes)", "Recorded automatically (start to end).", "Total interview time; the target is 45 minutes or less.", "num", origin="paradata", source="Design")
 R("P", "dur_tasks_min", "Time spent on tasks block L (minutes)", "Recorded automatically (module timestamps).", "Time for the short task and papers block; tracks the burden of the transferability add-on.", "num", origin="paradata", source="Design")
 

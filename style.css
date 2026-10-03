@@ -153,6 +153,11 @@ main { max-width: 680px; margin: 0 auto; padding: 20px 16px 104px; }
 .err { color: var(--warn); font-size: 13.5px; margin-top: 8px; }
 .opt { font-size: 12px; color: var(--mut); margin-top: 6px; }
 
+/* ── Menu pickers (enumerator, route): same label and select style as the questions ── */
+.pick { margin: 0 0 16px; }
+.pick:last-child { margin-bottom: 6px; }
+.pick .qn { margin-bottom: 6px; }
+
 /* ── Text inputs ── */
 input[type=text], input[type=number] {
   width: 100%;

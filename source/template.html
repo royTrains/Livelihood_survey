@@ -575,31 +575,110 @@ function showDone(){
   paint();
 }
 
-function start(){
+// The tablet must know which enumerator and which route it is on before anyone is approached. Both
+// are on every record, including refusals, so an interview cannot start without them.
+function deviceReady(){
   const dv = deviceCfg();
   if (!["1","2","3","4"].includes(String(dv.enum || ""))){
     alert(L ? "Choose the enumerator for this tablet first (on this screen)."
             : "पहले इस टैबलेट का सर्वेक्षक चुनें (इसी स्क्रीन पर)।");
-    return;
+    return false;
   }
   if (!["1","2"].includes(String(dv.site || ""))){
     alert(L ? "Choose the route for this tablet first (on this screen)."
             : "पहले इस टैबलेट का मार्ग चुनें (इसी स्क्रीन पर)।");
-    return;
+    return false;
   }
+  return true;
+}
+// Precise location. The device is asked for its best fix and keeps refining it for up to 90 seconds,
+// stopping early once the accuracy is 15 metres or better. The fix that is kept is the most accurate
+// one seen, not the first one, and its accuracy is stored with it. Never blocks the interview.
+function startGps(rid){
+  const mine = () => D && D.resp_id === rid;
+  if (!navigator.geolocation){ if (mine()){ D.gps_error = "2"; save(DKEY, D) } return }
+  const t0 = Date.now();
+  let watch = null;
+  const stop = () => { if (watch !== null){ navigator.geolocation.clearWatch(watch); watch = null } };
+  watch = navigator.geolocation.watchPosition(p => {
+    if (!mine()) return stop();
+    const acc = p.coords.accuracy;
+    if (!D.gps_accuracy_m || acc < +D.gps_accuracy_m){
+      D.gps_lat = p.coords.latitude.toFixed(6);
+      D.gps_lon = p.coords.longitude.toFixed(6);
+      D.gps_accuracy_m = String(Math.round(acc));
+      D.gps_fix_s = String(Math.round((Date.now() - t0) / 1000));
+      delete D.gps_error;
+      save(DKEY, D);
+    }
+    if (acc <= 15 || Date.now() - t0 > 90000) stop();
+  }, err => {
+    if (!mine()) return stop();
+    if (!D.gps_lat){
+      D.gps_error = err.code === 1 ? "1" : "2";
+      save(DKEY, D);
+      if (err.code === 1) alert(L
+        ? "Location is blocked for this site. Allow it in the browser's site settings. The interview can go on without it."
+        : "इस साइट के लिए स्थान बंद है। ब्राउज़र की साइट सेटिंग्स में इसे चालू करें। साक्षात्कार उसके बिना भी जारी रह सकता है।");
+    }
+    stop();
+  }, {enableHighAccuracy: true, maximumAge: 0, timeout: 30000});
+  setTimeout(stop, 120000);   // hard stop, whatever happens
+}
+function start(){
+  if (!deviceReady()) return;
+  const dv = deviceCfg(), rid = newId();
   // resp_id is minted HERE, not at export time, because the sheet upserts on it: it has to be on
   // the record from the first POST, and it has to survive a resend unchanged.
-  D = { __start: nowIST(), resp_id: newId() };
-  // GPS is requested once, at the start, and never blocks the interview if it is refused or slow
-  if (navigator.geolocation) navigator.geolocation.getCurrentPosition(
-    p => { D.gps_lat = p.coords.latitude.toFixed(5); D.gps_lon = p.coords.longitude.toFixed(5); save(DKEY, D) },
-    () => {}, {timeout: 20000, enableHighAccuracy: true});
-  D.interview_date = todayIST();
-  D.form_build = CFG.build;
-  D.consent = "1";
-  D.enum_id = dv.enum;
+  D = { __start: nowIST(), resp_id: rid, interview_date: todayIST(), form_build: CFG.build, consent: "1", enum_id: dv.enum };
   if (dv.site) D.site = dv.site;
+  startGps(rid);
   curMod = null; save(DKEY, D); render();
+}
+// "I do not agree". A refusal is recorded, not discarded: the enumerator fills in what they can see
+// and the record goes to the sheet like any other. See the consent script and the selection note.
+function declineConsent(){
+  if (!deviceReady()) return;
+  const dv = deviceCfg(), rid = newId();
+  D = { __start: nowIST(), resp_id: rid, interview_date: todayIST(), form_build: CFG.build, consent: "0", enum_id: dv.enum };
+  if (dv.site) D.site = dv.site;
+  startGps(rid);
+  save(DKEY, D);
+  renderRefusal();
+}
+function renderRefusal(){
+  screen = "refusal";
+  document.getElementById("nav").style.display = "none";
+  const Q = n => { const q = CFG.q.find(x => x.n === n); return q ? (L ? q.en : q.hi) : n };
+  const pick = (n) => "<div class=pick><div class=qn>" + Q(n) + "</div><select class=dd id=" + n + ">" +
+    "<option value=''>" + (L ? "-- choose --" : "-- चुनें --") + "</option>" +
+    Object.keys(CFG.labs[n]).map(k => "<option value=" + k + ">" + (L ? CFG.labs[n][k].e : CFG.labs[n][k].h) + "</option>").join("") +
+    "</select></div>";
+  document.getElementById("app").innerHTML =
+    "<div class=card>" +
+    "<div class=qn>" + (L ? "Consent not given" : "सहमति नहीं मिली") + "</div>" +
+    "<div class=qt>" + (L ? "No interview. Record only what you can see." : "कोई साक्षात्कार नहीं। सिर्फ़ वही लिखें जो दिखता है।") + "</div>" +
+    pick("obs_sex") + pick("obs_age") + pick("obs_setting") +
+    "<div class=pick><div class=qn>" + Q("refusal_reason") + "</div>" +
+    "<input type=text id=refusal_reason></div>" +
+    "<div style='display:flex;gap:10px;margin-top:18px'>" +
+    "<button class=p style='flex:1' onclick='saveRefusal()'>" + (L ? "Save and close" : "सेव करें और बंद करें") + "</button></div>" +
+    "</div>";
+  paint();
+}
+function saveRefusal(){
+  const sx = document.getElementById("obs_sex").value,
+        ag = document.getElementById("obs_age").value,
+        st = document.getElementById("obs_setting").value;
+  if (!sx || !ag || !st){
+    alert(L ? "Please fill in sex, age and place. Estimate the age if you are not sure."
+            : "कृपया लिंग, उम्र और जगह भरें। उम्र का अंदाज़ा लिख दें।");
+    return;
+  }
+  D.obs_sex = sx; D.obs_age = ag; D.obs_setting = st;
+  const rr = (document.getElementById("refusal_reason").value || "").trim();
+  if (rr) D.refusal_reason = rr;
+  finish(true);
 }
 
 // ---- export. Two files, one row per interview, same resp_id in both:
@@ -700,17 +779,21 @@ function menu(){
     "</div>" +
     "</div>" +
     "</div>" +
+    // The verbatim consent script, read out before anyone agrees. It used to appear only on a
+    // consent question that the menu no longer shows, so nothing was being read out at all.
+    "<div class=consent><span class=lead>" + t("verbatim") + "</span>" +
+    t("cons").split("\n\n").map(x => "<p>" + x + "</p>").join("") + "</div>" +
     // Which enumerator this tablet belongs to. Set once, here, and kept on the device. The sheet
     // accepts only 1-4, so a tablet without one would have every interview refused on sync.
-    "<div class=enum-pick><label>" + (L ? "Enumerator on this tablet" : "इस टैबलेट का सर्वेक्षक") + "</label>" +
-    "<select id=enumsel onchange='setEnum(this.value)'><option value=''>" + (L ? "-- choose --" : "-- चुनें --") + "</option>" +
+    "<div class=pick><div class=qn>" + (L ? "Enumerator on this tablet" : "इस टैबलेट का सर्वेक्षक") + "</div>" +
+    "<select class=dd id=enumsel onchange='setEnum(this.value)'><option value=''>" + (L ? "-- choose --" : "-- चुनें --") + "</option>" +
     [1,2,3,4].map(k => "<option value=" + k + (String(deviceCfg().enum) === String(k) ? " selected" : "") + ">" +
       (L ? CFG.labs.enum_id[k].e : CFG.labs.enum_id[k].h) + "</option>").join("") +
     "</select></div>" +
     // Which route this tablet is pointed at. The Stata build needs it on every row, so it is set
     // here with the enumerator rather than left to the sync screen where it was easy to miss.
-    "<div class=enum-pick><label>" + (L ? "Route on this tablet" : "इस टैबलेट का मार्ग") + "</label>" +
-    "<select id=sitesel onchange='setSite(this.value)'><option value=''>" + (L ? "-- choose --" : "-- चुनें --") + "</option>" +
+    "<div class=pick><div class=qn>" + (L ? "Route on this tablet" : "इस टैबलेट का मार्ग") + "</div>" +
+    "<select class=dd id=sitesel onchange='setSite(this.value)'><option value=''>" + (L ? "-- choose --" : "-- चुनें --") + "</option>" +
     [[1,"Kedarnath (Gaurikund to Kedarnath)","केदारनाथ (गौरीकुंड से केदारनाथ)"],[2,"Hemkund Sahib (Govindghat to Hemkund)","हेमकुंड साहिब (गोविंदघाट से हेमकुंड)"]]
       .map(o => "<option value=" + o[0] + (String(deviceCfg().site) === String(o[0]) ? " selected" : "") + ">" + (L ? o[1] : o[2]) + "</option>").join("") +
     "</select></div>" +
@@ -736,9 +819,6 @@ function menu(){
   paint();
 }
 
-function declineConsent(){
-  alert(t("declinemsg"));
-}
 
 function deleteAll(){
   const rows = all();
@@ -763,7 +843,7 @@ function syncSettings(){
   document.getElementById("nav").style.display = "none";
   const dvc = deviceCfg();
   const siteOpts = [[1,"Kedarnath (Gaurikund to Kedarnath)"],[2,"Hemkund Sahib (Govindghat to Hemkund)"]];
-  const siteSelect = "<select id=sdsite style='width:100%;padding:12px;font:inherit;border:1px solid var(--line);border-radius:8px'>" +
+  const siteSelect = "<select class=dd id=sdsite>" +
     "<option value=''>" + t("dsite_none") + "</option>" +
     siteOpts.map(o => "<option value='" + o[0] + "'" + (String(dvc.site) === String(o[0]) ? " selected" : "") + ">" + o[1] + "</option>").join("") +
     "</select>";
