@@ -158,10 +158,11 @@ function deviceCfg(){
 // Baked build-time address (may be empty) overridden by whatever this tablet was given. Per-device
 // wins: a tablet pointed at a test sheet during training must not silently revert on the next
 // rebuild.
+// The sheet address and token are fixed in the build (sync_config.json). There is no on-tablet
+// setting for them: every tablet sends to the same sheet, automatically.
 function syncCfg(){
-  const o = load(SKEY, {}) || {};
-  return { url: String(o.url || (CFG.sync && CFG.sync.url) || "").trim(),
-           token: String(o.token || (CFG.sync && CFG.sync.token) || "").trim() };
+  return { url: String((CFG.sync && CFG.sync.url) || "").trim(),
+           token: String((CFG.sync && CFG.sync.token) || "").trim() };
 }
 const unsynced = () => all().filter(r => !r.__synced).length;
 
@@ -806,13 +807,12 @@ function menu(){
     "<div class=card>" +
     "<div class=menu-row><span class=menu-label>" + t("cnt") + "</span>" +
       "<span class=menu-act><span class=menu-count>" + rows.length + "</span>" +
-      (u ? "<button class='menu-btn p' onclick='syncPending(1)'>Sync</button>" : "") +
       "</span></div>" +
+    (syncCfg().url ? "" : "<p class=err>" + (L ? "This build is not connected to the sheet. Interviews are kept on this tablet." : "यह बिल्ड शीट से जुड़ा नहीं है। साक्षात्कार इसी टैबलेट पर रहेंगे।") + "</p>") +
     "</div>" +
     // ── Action buttons ──
     "<div style='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:32px'>" +
     "<button onclick='exportCsv()'>" + t("exp") + "</button>" +
-    "<button onclick='syncSettings()'>" + t("syncset") + "</button>" +
     "<button onclick='clearExported()'>" + t("clr") + "</button>" +
     "<button class=danger onclick='deleteAll()'>" + t("delall") + "</button>" +
     "</div>";
@@ -837,53 +837,8 @@ function deleteAll(){
 // The address is entered on the tablet rather than only baked into the build, so a sheet can be
 // changed, or a training sheet swapped for the real one, without rebuilding and redeploying the
 // form to four devices over a connection that may not exist.
-function syncSettings(){
-  screen = "sync";
-  const c = syncCfg();
-  document.getElementById("nav").style.display = "none";
-  const dvc = deviceCfg();
-  const siteOpts = [[1,"Kedarnath (Gaurikund to Kedarnath)"],[2,"Hemkund Sahib (Govindghat to Hemkund)"]];
-  const siteSelect = "<select class=dd id=sdsite>" +
-    "<option value=''>" + t("dsite_none") + "</option>" +
-    siteOpts.map(o => "<option value='" + o[0] + "'" + (String(dvc.site) === String(o[0]) ? " selected" : "") + ">" + o[1] + "</option>").join("") +
-    "</select>";
-  document.getElementById("app").innerHTML =
-    "<div class=card>" +
-    "<p class=qn>" + t("devid") + "</p><p style='font-family:monospace;font-size:15px;padding:8px 0'>" + dvc.id + "</p>" +
-    "<p class=qn>" + t("dsite") + "</p><p>" + siteSelect + "</p>" +
-    "<p class=qn>" + t("surl") + "</p>" +
-    "<p><input type=text id=su value=" + JSON.stringify(c.url) + " placeholder='https://script.google.com/macros/s/.../exec'></p>" +
-    "<p class=qn>" + t("stok") + "</p><p><input type=text id=st value=" + JSON.stringify(c.token) + "></p>" +
-    "<p id=sres class=opt></p>" +
-    "<p><button style='width:100%;margin-bottom:8px' class=p onclick='syncPending(1)'>" + t("syncnow") + "</button></p>" +
-    "<p><button onclick='testSync()'>" + t("stest") + "</button> " +
-    "<button class=p onclick='saveSync()'>" + t("ssave") + "</button> " +
-    "<button onclick='menu()'>" + t("sclose") + "</button></p></div>";
-  paint();
-}
-function saveSync(){
-  save(SKEY, { url: document.getElementById("su").value.trim(),
-               token: document.getElementById("st").value.trim() });
-  const dvc = deviceCfg();
-  const sv = document.getElementById("sdsite").value;
-  if (sv) dvc.site = +sv; else delete dvc.site;
-  save(DVCKEY, dvc);
-  menu();
-}
 // A GET health check, so the address can be proved right at the hotel the night before rather than
 // discovered wrong at the end of a day's interviews.
-async function testSync(){
-  const el = document.getElementById("sres");
-  const url = document.getElementById("su").value.trim();
-  if (!url) return el.textContent = t("syncoff");
-  el.textContent = t("syncing");
-  try {
-    const r = await fetch(url, {method:"GET"});
-    const o = JSON.parse(await r.text());
-    el.textContent = o.ok ? ("OK, " + o.sheet + ", " + (o.interviews && o.interviews.answers) + " rows")
-                          : ("? " + (o.error || "no"));
-  } catch(e){ el.textContent = t("syncfail") + ": " + e.message }
-}
 function clearExported(){
   const keep = all().filter(r => !r.__exported);
   const gone = all().length - keep.length;
@@ -899,14 +854,12 @@ function clearExported(){
 }
 document.getElementById("next").onclick = next;
 document.getElementById("back").onclick = back;
-document.getElementById("menu").onclick = syncSettings;
 document.getElementById("lang").onclick = () => {
   L = 1 - L;
   const modal = document.getElementById("resume-modal");
   if (modal){ menu(); modal.remove(); showResume(window._pendingDraft); return; }
   if (screen === "q") render();
   else if (screen === "done") showDone();
-  else if (screen === "sync") syncSettings();
   else menu();
 };
 window.addEventListener("beforeunload", e => { if (Object.keys(D).length > 2){ e.preventDefault(); e.returnValue = "" } });
