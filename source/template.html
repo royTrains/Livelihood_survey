@@ -668,34 +668,26 @@ function renderRefusal(){
   screen = "refusal";
   document.getElementById("nav").style.display = "none";
   const Q = n => { const q = CFG.q.find(x => x.n === n); return q ? (L ? q.en : q.hi) : n };
-  const pick = (n) => "<div class=pick><div class=qn>" + Q(n) + "</div><select class=dd id=" + n + ">" +
-    "<option value=''>" + (L ? "-- choose --" : "-- चुनें --") + "</option>" +
-    Object.keys(CFG.labs[n]).map(k => "<option value=" + k + ">" + (L ? CFG.labs[n][k].e : CFG.labs[n][k].h) + "</option>").join("") +
-    "</select></div>";
+  const opts = Object.keys(CFG.labs.obs_environment).map(k =>
+    "<option value=" + k + ">" + (L ? CFG.labs.obs_environment[k].e : CFG.labs.obs_environment[k].h) + "</option>").join("");
   document.getElementById("app").innerHTML =
     "<div class=card>" +
     "<div class=qn>" + (L ? "Consent not given" : "सहमति नहीं मिली") + "</div>" +
-    "<div class=qt>" + (L ? "No interview. Record only what you can see." : "कोई साक्षात्कार नहीं। सिर्फ़ वही लिखें जो दिखता है।") + "</div>" +
-    pick("obs_sex") + pick("obs_age") + pick("obs_setting") +
-    "<div class=pick><div class=qn>" + Q("refusal_reason") + "</div>" +
-    "<input type=text id=refusal_reason></div>" +
+    "<div class=qt>" + (L ? "No interview. Record only the conditions at the time." : "कोई साक्षात्कार नहीं। सिर्फ़ उस वक़्त के हालात लिखें।") + "</div>" +
+    "<div class=pick><div class=qn>" + Q("obs_environment") + "</div>" +
+    "<select class=dd id=obs_environment><option value=''>" + (L ? "-- choose --" : "-- चुनें --") + "</option>" + opts + "</select></div>" +
     "<div style='display:flex;gap:10px;margin-top:18px'>" +
     "<button class=p style='flex:1' onclick='saveRefusal()'>" + (L ? "Save and close" : "सेव करें और बंद करें") + "</button></div>" +
     "</div>";
   paint();
 }
 function saveRefusal(){
-  const sx = document.getElementById("obs_sex").value,
-        ag = document.getElementById("obs_age").value,
-        st = document.getElementById("obs_setting").value;
-  if (!sx || !ag || !st){
-    alert(L ? "Please fill in sex, age and place. Estimate the age if you are not sure."
-            : "कृपया लिंग, उम्र और जगह भरें। उम्र का अंदाज़ा लिख दें।");
+  const env = document.getElementById("obs_environment").value;
+  if (!env){
+    alert(L ? "Please choose the conditions at the time." : "कृपया उस वक़्त के हालात चुनें।");
     return;
   }
-  D.obs_sex = sx; D.obs_age = ag; D.obs_setting = st;
-  const rr = (document.getElementById("refusal_reason").value || "").trim();
-  if (rr) D.refusal_reason = rr;
+  D.obs_environment = env;
   finish(true);
 }
 

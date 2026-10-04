@@ -8,7 +8,7 @@ We are doing a study on the livelihoods of people who work on the Yatra route. I
 
 Taking part is your choice. You can stop at any time, and you can skip any question you do not want to answer. Nothing you tell me will be linked to your name, and nothing you say will affect your work here or any government benefit.
 
-If you say no, I will not ask you any questions. I will write down only that you said no, the date and time, where we met, and what I can see: whether you are a man or a woman, and roughly how old you are. Your name is not asked for, and no answers are recorded.
+If you say no, I will not ask you any questions. I will write down only that you said no, the date and time, and what was happening at the time, such as crowding or weather. I will not write down your name, your sex, your age, or where you are. No answers are recorded.
 
 > **ENUMERATOR:** If they say no, thank them and stop.
 

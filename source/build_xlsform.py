@@ -66,10 +66,7 @@ K_TAIL = "${job_situation} <= 7"
 K_SEEKING = "${job_situation} = 8"
 RELEVANT = {
     # Refusals only (consent = 0). Written 2026-10-03 with the refusal record.
-    "obs_sex": "${consent} = 0",
-    "obs_age": "${consent} = 0",
-    "obs_setting": "${consent} = 0",
-    "refusal_reason": "${consent} = 0",
+    "obs_environment": "${consent} = 0",
     "home_state": "${origin} = 3",
     "came_here_reason_other": "${came_here_reason} = 8",
     # Only the OUTWARD off-season amount. A respondent who goes home at closure is living with the
@@ -321,7 +318,7 @@ add("end", "end", "end")
 # ---- Module P: consent gate first, then the paradata items that stay real questions --------
 # Refusal fields and the browser-written GPS fields are not asked of everyone, so they are handled
 # below (refusal fields) or left to Kobo's own geopoint metadata (GPS fields).
-REFUSAL_FIELDS = ("obs_sex", "obs_age", "obs_setting", "refusal_reason")
+REFUSAL_FIELDS = ("obs_environment",)
 WEB_ONLY_GPS = ("gps_accuracy_m", "gps_fix_s", "gps_error")
 p_rows = [r for r in ROWS if r["module"] == "P" and r["name"] not in DROP_PARADATA
           and r["name"] not in WEB_ONLY_GPS]
@@ -350,8 +347,7 @@ for r in p_rows:
         continue
     if r["name"] in REFUSAL_FIELDS:
         # asked only when consent is refused, so outside the consent-gated survey group below
-        add(xlsform_type(r), r["name"], r["question"], required=("yes" if r["name"] != "refusal_reason" else "no"),
-            relevant="${consent} = 0")
+        add(xlsform_type(r), r["name"], r["question"], required="yes", relevant="${consent} = 0")
         continue
     add(xlsform_type(r), r["name"], r["question"], required="yes")
 

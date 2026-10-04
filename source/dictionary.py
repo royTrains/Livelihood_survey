@@ -35,7 +35,7 @@ CONSENT_SCRIPT = """We are doing a study on the livelihoods of people who work o
 
 Taking part is your choice. You can stop at any time, and you can skip any question you do not want to answer. Nothing you tell me will be linked to your name, and nothing you say will affect your work here or any government benefit.
 
-If you say no, I will not ask you any questions. I will write down only that you said no, the date and time, where we met, and what I can see: whether you are a man or a woman, and roughly how old you are. Your name is not asked for, and no answers are recorded."""
+If you say no, I will not ask you any questions. I will write down only that you said no, the date and time, and what was happening at the time, such as crowding or weather. I will not write down your name, your sex, your age, or where you are. No answers are recorded."""
 
 
 # The plain-language description of the study, shown on the landing screen before the consent
@@ -150,9 +150,7 @@ LSETS = {
     "yn": {0: "No", 1: "Yes"},
     "ropexp": {1: "More work for me", 2: "Less work for me", 3: "About the same", 97: "Don't know"},
     "ropjobs": {1: "People from these villages", 2: "People from outside the area", 3: "Nobody will get jobs", 97: "Don't know"},
-    "obssex": {1: "Man", 2: "Woman"},
-    "obsage": {1: "Under 25", 2: "25 to 40", 3: "Over 40", 97: "Cannot tell"},
-    "obsset": {1: "On the route", 2: "At a worksite", 3: "At lodging or a camp", 4: "Somewhere else"},
+    "obsenv": {1: "Normal crowd, normal weather", 2: "High crowd or peak hours", 3: "Rain or extreme weather", 4: "Both high crowd and bad weather"},
     "gpserr": {1: "Location not allowed in the browser", 2: "No fix obtained"},
     "cprwater": {1: "Yes, free to use", 2: "A source exists but we must pay", 3: "No source nearby", 97: "Don't know"},
     "cprgov": {1: "Village head or panchayat", 2: "Forest department", 3: "Local committee or community group", 4: "Nobody decides; it is open to all", 97: "Don't know"},
@@ -467,7 +465,7 @@ SRC_STD = "Standard household-survey item"
 #   form_build stamped from the build id.
 # Listed here rather than flagged on each R() call so the whole set is visible in one place: a
 # question quietly becoming invisible is exactly the change that needs to be easy to audit.
-HIDDEN_ON_FORM = {"enum_id", "site", "consent", "form_build", "obs_sex", "obs_age", "obs_setting", "refusal_reason"}
+HIDDEN_ON_FORM = {"enum_id", "site", "consent", "form_build", "obs_environment"}
 
 ROWS = []
 
@@ -494,10 +492,7 @@ R("P", "consent", "Respondent gave informed consent", "Recorded from the landing
 # refusal is data: the people who decline are systematically different, and without a record of
 # them the interviewed sample cannot be corrected for who was missing (see the selection note in
 # do/02_build_final_dataset.do). Asked ONLY when consent = 0.
-R("P", "obs_sex", "Sex of the person approached (refusals only)", "Write down what you can see. Do not ask.", "Observed by the enumerator when consent is refused. Lets the refusals be compared with the people who took part.", "cat", "obssex", skip="Ask only if consent = 0", origin="paradata", source="Design: sample-selection record")
-R("P", "obs_age", "Rough age of the person approached (refusals only)", "Estimate it. Do not ask.", "Observed by the enumerator when consent is refused. A rough band is enough for a selection equation.", "cat", "obsage", skip="Ask only if consent = 0", origin="paradata", source="Design: sample-selection record")
-R("P", "obs_setting", "Where the person was approached (refusals only)", "Where were you when you approached them?", "Observed by the enumerator when consent is refused. Setting is the main variable that can explain who is approached and who declines.", "cat", "obsset", skip="Ask only if consent = 0", origin="paradata", source="Design: sample-selection record")
-R("P", "refusal_reason", "Reason for refusing, in their own words (refusals only, may be left blank)", "If they give a reason, write it down exactly as they say it. Do not press for one.", "Free text, optional. Recorded verbatim so the reasons can be coded later without re-asking anyone.", "text", skip="Ask only if consent = 0. May be left blank.", origin="paradata", source="Design: sample-selection record")
+R("P", "obs_environment", "Conditions where the person was approached (refusals only)", "Pick what was happening at the time. Do not ask the person.", "Recorded by the enumerator when consent is refused, with the timestamp, the enumerator and the route. Only the conditions at the time are recorded (crowding, weather). No personal characteristics and no location of the person are recorded for a refusal.", "cat", "obsenv", skip="Ask only if consent = 0", origin="paradata", source="Design: refusal record, limited to environmental conditions")
 # Precise location. Written by the tablet from the best GPS fix obtained, not from a coarse network fix.
 R("P", "gps_accuracy_m", "GPS accuracy of the location fix (metres)", "Recorded automatically.", "The accuracy the device reports for the fix that was kept. The form keeps refining the fix for up to 90 seconds and stops at 15 metres. A fix of 50 metres or worse is flagged in the export so it can be checked.", "num", origin="paradata", source="Design")
 R("P", "gps_fix_s", "Seconds taken to get the location fix", "Recorded automatically.", "How long the device took to produce the fix that was kept. A long fix is a sign of a weak signal.", "num", origin="paradata", source="Design")
