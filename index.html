@@ -674,6 +674,12 @@ function renderRefusal(){
     "<div class=card>" +
     "<div class=qn>" + (L ? "Consent not given" : "सहमति नहीं मिली") + "</div>" +
     "<div class=qt>" + (L ? "No interview. Record only the conditions at the time." : "कोई साक्षात्कार नहीं। सिर्फ़ उस वक़्त के हालात लिखें।") + "</div>" +
+    // What the record will carry, shown so the enumerator can see it is there.
+    "<div class=pick><div class=qn>" + (L ? "Recorded automatically" : "अपने-आप दर्ज होता है") + "</div>" +
+    "<div>" + (L ? "Time: " : "समय: ") + (D.__start || "").slice(0,16).replace("T"," ") + "<br>" +
+    (L ? "Enumerator: " : "सर्वेक्षक: ") + (CFG.labs.enum_id[D.enum_id] ? (L ? CFG.labs.enum_id[D.enum_id].e : CFG.labs.enum_id[D.enum_id].h) : "—") + "<br>" +
+    (L ? "Route: " : "मार्ग: ") + (String(D.site) === "1" ? (L ? "Kedarnath" : "केदारनाथ") : String(D.site) === "2" ? (L ? "Hemkund Sahib" : "हेमकुंड साहिब") : "—") +
+    "</div></div>" +
     "<div class=pick><div class=qn>" + Q("obs_environment") + "</div>" +
     "<select class=dd id=obs_environment><option value=''>" + (L ? "-- choose --" : "-- चुनें --") + "</option>" + opts + "</select></div>" +
     "<div style='display:flex;gap:10px;margin-top:18px'>" +
