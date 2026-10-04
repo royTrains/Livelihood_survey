@@ -502,7 +502,7 @@ R("P", "refusal_reason", "Reason for refusing, in their own words (refusals only
 R("P", "gps_accuracy_m", "GPS accuracy of the location fix (metres)", "Recorded automatically.", "The accuracy the device reports for the fix that was kept. The form keeps refining the fix for up to 90 seconds and stops at 15 metres. A fix of 50 metres or worse is flagged in the export so it can be checked.", "num", origin="paradata", source="Design")
 R("P", "gps_fix_s", "Seconds taken to get the location fix", "Recorded automatically.", "How long the device took to produce the fix that was kept. A long fix is a sign of a weak signal.", "num", origin="paradata", source="Design")
 R("P", "gps_error", "Location problem, if no fix was obtained", "Recorded automatically.", "1 = the browser was not allowed to use location; 2 = no fix was obtained. Blank when a fix was obtained.", "cat", "gpserr", origin="paradata", source="Design")
-R("P", "interview_duration_min", "Interview length (minutes)", "Recorded automatically (start to end).", "Total interview time; the target is 45 minutes or less.", "num", origin="paradata", source="Design")
+R("P", "interview_duration_min", "Interview length (minutes)", "Recorded automatically (start to end).", "Total interview time, from the tablet's own start and end timestamps. Recorded for analysis; no time limit is set.", "num", origin="paradata", source="Design")
 R("P", "dur_tasks_min", "Time spent on tasks block L (minutes)", "Recorded automatically (module timestamps).", "Time for the short task and papers block; tracks the burden of the transferability add-on.", "num", origin="paradata", source="Design")
 
 # ------------------------------------------------------------------ A  respondent and household
@@ -850,11 +850,10 @@ R("I", "shock_coping", "How the household coped (check all that apply)", "How di
 RCSI = ("The reduced Coping Strategy Index (rCSI): five food-coping questions, standard WFP weights (1, 2, 1, "
         "1, 3) applied when the index is built. The Kedarnath instrument otherwise has no food-security "
         "module, which is a gap for a poverty-vulnerability survey; these five short questions close it at "
-        "low cost instead of a full dietary-diversity module, left out to stay inside the 45-minute limit. "
+        "low cost instead of a full dietary-diversity module, which is not included in this instrument. "
         "Kept as day-counts (0-7), not collapsed to yes/no: this is the standard, validated WFP/FAO "
         "specification (frequency x severity), and no comparably-standard binary version was found on "
-        "checking; a day-count also takes about as long to answer as a yes/no in practice, so little "
-        "interview time is saved by simplifying it.")
+        "checking.")
 RCSIS = ("Workers here are migrants, interviewed during the Yatra season: a single 'last 7 days' recall would "
          "describe only their on-site coping at the work site, not their household's usual pattern, which may "
          "look very different in the off-season (different household members present, different food access). "
