@@ -659,7 +659,8 @@ function declineConsent(){
   const dv = deviceCfg(), rid = newId();
   D = { __start: nowIST(), resp_id: rid, interview_date: todayIST(), form_build: CFG.build, consent: "0", enum_id: dv.enum };
   if (dv.site) D.site = dv.site;
-  gpsRestart(); gpsApply();
+  // No location for a refusal: consent has not been given, so no coordinates are taken.
+  gpsStop(); gpsBest = null; gpsErr = null;
   save(DKEY, D);
   renderRefusal();
 }
@@ -902,8 +903,6 @@ if ("serviceWorker" in navigator) {
   }).catch(() => {});   // an unsupported browser must still run the form, just without offline
 }
 
-// Ask for precise location as soon as the form opens.
-gpsOpen();
 const draft = load(DKEY, null);
 if (draft && Object.keys(draft).length > 2) showResume(draft);
 else menu();

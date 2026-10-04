@@ -337,7 +337,8 @@ add("select_one site", "site", site_row["question"], required="yes")
 consent_row = next(r for r in p_rows if r["name"] == "consent")
 add("select_one yn", "consent", consent_row["question"], required="yes")
 # background-geopoint: silent capture, no on-screen question; fires once consent is answered
-add("background-geopoint", "gps_location", "GPS location of the interview (captured silently).", trigger="${consent}")
+# Location only after consent is given. trigger="${consent}" fired on a refusal too, so the trigger is "= 1".
+add("background-geopoint", "gps_location", "GPS location of the interview (captured silently).", trigger="${consent} = 1")
 # form_build is a hidden CALCULATE carrying dictionary.BUILD, not a question. It reached this loop
 # as an ordinary paradata row and came out as a REQUIRED TEXT FIELD labelled "Recorded
 # automatically." -- an unanswerable required question that would have stopped the Kobo form dead,
