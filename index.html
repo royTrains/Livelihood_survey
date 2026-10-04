@@ -592,39 +592,55 @@ function deviceReady(){
   }
   return true;
 }
-// Precise location. The device is asked for its best fix and keeps refining it for up to 90 seconds,
-// stopping early once the accuracy is 15 metres or better. The fix that is kept is the most accurate
-// one seen, not the first one, and its accuracy is stored with it. Never blocks the interview.
-function startGps(rid){
-  const mine = () => D && D.resp_id === rid;
-  if (!navigator.geolocation){ if (mine()){ D.gps_error = "2"; save(DKEY, D) } return }
-  const t0 = Date.now();
-  let watch = null;
-  const stop = () => { if (watch !== null){ navigator.geolocation.clearWatch(watch); watch = null } };
-  watch = navigator.geolocation.watchPosition(p => {
-    if (!mine()) return stop();
-    const acc = p.coords.accuracy;
-    if (!D.gps_accuracy_m || acc < +D.gps_accuracy_m){
-      D.gps_lat = p.coords.latitude.toFixed(6);
-      D.gps_lon = p.coords.longitude.toFixed(6);
-      D.gps_accuracy_m = String(Math.round(acc));
-      D.gps_fix_s = String(Math.round((Date.now() - t0) / 1000));
-      delete D.gps_error;
-      save(DKEY, D);
+// Precise location. Asked for as soon as the form opens, not when an interview starts, so the fix
+// is ready by the time anyone is approached. The most accurate fix seen is kept (not the first),
+// to six decimal places, with its accuracy and how long it took. Refreshes for up to two minutes,
+// stopping early at 15 metres or better. Never blocks anything.
+let gpsBest = null, gpsErr = null, gpsT0 = Date.now(), gpsWatch = null, gpsTimer = null;
+function gpsStop(){
+  if (gpsWatch !== null && navigator.geolocation) navigator.geolocation.clearWatch(gpsWatch);
+  gpsWatch = null;
+  clearTimeout(gpsTimer);
+}
+// Copy the best fix onto the record being filled in, if there is one.
+function gpsApply(){
+  if (!D || !D.resp_id) return;
+  if (gpsBest){
+    D.gps_lat = gpsBest.lat; D.gps_lon = gpsBest.lon;
+    D.gps_accuracy_m = String(gpsBest.acc); D.gps_fix_s = String(gpsBest.s);
+    delete D.gps_error;
+  } else if (gpsErr){
+    D.gps_error = gpsErr;
+  }
+  save(DKEY, D);
+}
+function gpsOpen(){
+  if (!navigator.geolocation){ gpsErr = "2"; gpsApply(); return }
+  gpsWatch = navigator.geolocation.watchPosition(p => {
+    const acc = Math.round(p.coords.accuracy);
+    if (!gpsBest || acc < gpsBest.acc){
+      gpsBest = { lat: p.coords.latitude.toFixed(6), lon: p.coords.longitude.toFixed(6),
+                  acc: acc, s: Math.round((Date.now() - gpsT0) / 1000) };
+      gpsErr = null;
+      gpsApply();
     }
-    if (acc <= 15 || Date.now() - t0 > 90000) stop();
+    if (acc <= 15) gpsStop();
   }, err => {
-    if (!mine()) return stop();
-    if (!D.gps_lat){
-      D.gps_error = err.code === 1 ? "1" : "2";
-      save(DKEY, D);
+    if (!gpsBest){
+      gpsErr = err.code === 1 ? "1" : "2";
+      gpsApply();
       if (err.code === 1) alert(L
         ? "Location is blocked for this site. Allow it in the browser's site settings. The interview can go on without it."
         : "इस साइट के लिए स्थान बंद है। ब्राउज़र की साइट सेटिंग्स में इसे चालू करें। साक्षात्कार उसके बिना भी जारी रह सकता है।");
     }
-    stop();
   }, {enableHighAccuracy: true, maximumAge: 0, timeout: 30000});
-  setTimeout(stop, 120000);   // hard stop, whatever happens
+  gpsTimer = setTimeout(gpsStop, 120000);
+}
+// A new record gets a fresh fix: the device may have moved since the last interview.
+function gpsRestart(){
+  gpsStop();
+  gpsBest = null; gpsErr = null; gpsT0 = Date.now();
+  gpsOpen();
 }
 function start(){
   if (!deviceReady()) return;
@@ -633,7 +649,7 @@ function start(){
   // the record from the first POST, and it has to survive a resend unchanged.
   D = { __start: nowIST(), resp_id: rid, interview_date: todayIST(), form_build: CFG.build, consent: "1", enum_id: dv.enum };
   if (dv.site) D.site = dv.site;
-  startGps(rid);
+  gpsRestart(); gpsApply();
   curMod = null; save(DKEY, D); render();
 }
 // "I do not agree". A refusal is recorded, not discarded: the enumerator fills in what they can see
@@ -643,7 +659,7 @@ function declineConsent(){
   const dv = deviceCfg(), rid = newId();
   D = { __start: nowIST(), resp_id: rid, interview_date: todayIST(), form_build: CFG.build, consent: "0", enum_id: dv.enum };
   if (dv.site) D.site = dv.site;
-  startGps(rid);
+  gpsRestart(); gpsApply();
   save(DKEY, D);
   renderRefusal();
 }
@@ -780,10 +796,20 @@ function menu(){
     "</div>" +
     "</div>" +
     "</div>" +
-    // The verbatim consent script, read out before anyone agrees. It used to appear only on a
-    // consent question that the menu no longer shows, so nothing was being read out at all.
-    "<div class=consent><span class=lead>" + t("verbatim") + "</span>" +
-    t("cons").split("\n\n").map(x => "<p>" + x + "</p>").join("") + "</div>" +
+    "<div style='display:flex;gap:10px;margin-top:18px'>" +
+    "<button style='flex:1' onclick='declineConsent()'>" + t("decline") + "</button>" +
+    "<button class=p style='flex:2;font-size:16px' onclick='start()'>" + t("agree") + "</button>" +
+    "</div>" +
+    "</div>" +
+    // ── Stats row (subtle) ──
+    "<div class=card>" +
+    "<div class=menu-row><span class=menu-label>" + t("cnt") + "</span>" +
+      "<span class=menu-act><span class=menu-count>" + rows.length + "</span>" +
+      "</span></div>" +
+    (syncCfg().url ? "" : "<p class=err>" + (L ? "This build is not connected to the sheet. Interviews are kept on this tablet." : "यह बिल्ड शीट से जुड़ा नहीं है। साक्षात्कार इसी टैबलेट पर रहेंगे।") + "</p>") +
+    "</div>" +
+    // Device setup (enumerator and route). Its own card, so the consent card above is unchanged.
+    "<div class=card>" +
     // Which enumerator this tablet belongs to. Set once, here, and kept on the device. The sheet
     // accepts only 1-4, so a tablet without one would have every interview refused on sync.
     "<div class=pick><div class=qn>" + (L ? "Enumerator on this tablet" : "इस टैबलेट का सर्वेक्षक") + "</div>" +
@@ -798,17 +824,6 @@ function menu(){
     [[1,"Kedarnath (Gaurikund to Kedarnath)","केदारनाथ (गौरीकुंड से केदारनाथ)"],[2,"Hemkund Sahib (Govindghat to Hemkund)","हेमकुंड साहिब (गोविंदघाट से हेमकुंड)"]]
       .map(o => "<option value=" + o[0] + (String(deviceCfg().site) === String(o[0]) ? " selected" : "") + ">" + (L ? o[1] : o[2]) + "</option>").join("") +
     "</select></div>" +
-    "<div style='display:flex;gap:10px;margin-top:18px'>" +
-    "<button style='flex:1' onclick='declineConsent()'>" + t("decline") + "</button>" +
-    "<button class=p style='flex:2;font-size:16px' onclick='start()'>" + t("agree") + "</button>" +
-    "</div>" +
-    "</div>" +
-    // ── Stats row (subtle) ──
-    "<div class=card>" +
-    "<div class=menu-row><span class=menu-label>" + t("cnt") + "</span>" +
-      "<span class=menu-act><span class=menu-count>" + rows.length + "</span>" +
-      "</span></div>" +
-    (syncCfg().url ? "" : "<p class=err>" + (L ? "This build is not connected to the sheet. Interviews are kept on this tablet." : "यह बिल्ड शीट से जुड़ा नहीं है। साक्षात्कार इसी टैबलेट पर रहेंगे।") + "</p>") +
     "</div>" +
     // ── Action buttons ──
     "<div style='display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:32px'>" +
@@ -887,6 +902,8 @@ if ("serviceWorker" in navigator) {
   }).catch(() => {});   // an unsupported browser must still run the form, just without offline
 }
 
+// Ask for precise location as soon as the form opens.
+gpsOpen();
 const draft = load(DKEY, null);
 if (draft && Object.keys(draft).length > 2) showResume(draft);
 else menu();
