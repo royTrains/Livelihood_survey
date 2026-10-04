@@ -907,7 +907,22 @@ Now two questions about the ropeway that has been proposed between Gaurikund and
 
 > **ENUMERATOR:** Options: 1 Support · 2 Neutral · 3 Oppose · 98 Prefer not to say
 
-**182.** Is your main work carrying, transporting or guiding people or goods on foot along the pilgrimage trek?
+**182.** If the ropeway is built, what do you think will happen to your own work? More work for you; less work; about the same; or don't know?
+
+> **ENUMERATOR:** Ask only if: site = 1 (Kedarnath route)  
+> Options: 1 More work for me · 2 Less work for me · 3 About the same · 97 Don't know
+
+**183.** Who do you think will get most of the jobs the ropeway creates? People from these villages; people from outside the area; nobody will get jobs; or don't know?
+
+> **ENUMERATOR:** Ask only if: site = 1 (Kedarnath route)  
+> Options: 1 People from these villages · 2 People from outside the area · 3 Nobody will get jobs · 97 Don't know
+
+**184.** Do you think the ropeway will improve the livelihoods of people here? Yes; no; or don't know?
+
+> **ENUMERATOR:** Ask only if: site = 1 (Kedarnath route)  
+> Options: 0 No · 1 Yes · 97 Don't know
+
+**185.** Is your main work carrying, transporting or guiding people or goods on foot along the pilgrimage trek?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes
 
@@ -920,122 +935,122 @@ Now two questions about the ropeway that has been proposed between Gaurikund and
 
 Now a set of questions about the conditions of your work — hours, pay, contract and so on. These come from a standard list used in many countries, so one or two may not fit your situation. Say so and we will move on.
 
-**183.** During the last month, what were you mainly doing? Ask it open and code the closest one; do not read the list out.
+**186.** During the last month, what were you mainly doing? Ask it open and code the closest one; do not read the list out.
 
 > **ENUMERATOR:** Options: 1 Works for pay full-time · 2 Works for pay part-time or occasional jobs · 3 Studies and works · 4 Only studies · 5 Being trained for work only · 6 Retired or pensioned · 7 Unpaid household tasks or caring for others · 8 Unemployed, actively seeking work · 9 Sick or disabled, cannot work · 10 Neither studying, working nor seeking work · 97 Does not know  
 > How to code: Code what they were MAINLY doing, by time, over the last month. Work for pay = full-time if it was their main activity on most working days, part-time or occasional if it was picked up here and there around something else. Seasonal preparation (buying stock, repairing tack, bringing animals up) IS working for pay — it is their trade — so code 1 or 2, not 10. Unemployed (8) means looking for work and not finding it; between seasons with work expected is not unemployed. Code 10 is the genuine none: not working, not studying, not looking.
 
-**184.** Is your job: permanent; seasonal or temporary; occasional or casual; on probation; or fixed-term?
+**187.** Is your job: permanent; seasonal or temporary; occasional or casual; on probation; or fixed-term?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 1 Permanent · 2 Seasonal or temporary · 3 Occasional or casual · 4 On probation · 5 Fixed-term  
 > How to code: Both will sound seasonal here — the Yatra closes for everyone. Ask about WITHIN the season. One employer keeps them on for a stretch = Seasonal or temporary. They take work day by day from whoever offers it = Occasional or casual. Self-employed: answer for how their own work runs. On probation and Fixed-term are rare here; do not reach for them.
 
-**185.** Do you have a signed contract? Yes, signed; yes but not yet signed; no contract.
+**188.** Do you have a signed contract? Yes, signed; yes but not yet signed; no contract.
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working); and employment_type is 3 or 4 (wage workers) — self-employed skip to the next question  
 > Options: 1 Yes, signed · 2 Yes, but not yet signed · 3 No contract
 
-**186.** Is your workplace or business registered, for example with a taxpayer or GST number, a shop or trade licence, the Yatra registration, or a union?
+**189.** Is your workplace or business registered, for example with a taxpayer or GST number, a shop or trade licence, the Yatra registration, or a union?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes
 
-**187.** Do you contribute to any pension system? Yes, the employer deducts it; yes, voluntarily; no.
+**190.** Do you contribute to any pension system? Yes, the employer deducts it; yes, voluntarily; no.
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 1 Yes, employer deducts it · 2 Yes, contributes voluntarily · 3 No
 
-**188.** Do you have health insurance through your work? Yes; only private or other insurance; none; don't know.
+**191.** Do you have health insurance through your work? Yes; only private or other insurance; none; don't know.
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 1 Yes, through work · 2 Only private or other insurance · 3 None · 4 Don't know
 
-**189.** Do you have the right to paid holiday, sick or maternity leave?
+**192.** Do you have the right to paid holiday, sick or maternity leave?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**190.** Have you ever been physically injured at your workplace?
+**193.** Have you ever been physically injured at your workplace?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**191.** In the last 12 months, was anyone physically injured at your workplace because of work?
+**194.** In the last 12 months, was anyone physically injured at your workplace because of work?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**192.** And in the last 12 months, did anyone die at your workplace because of work?
+**195.** And in the last 12 months, did anyone die at your workplace because of work?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**193.** Would you like to work more hours than you do?
+**196.** Would you like to work more hours than you do?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1 to 7 (Apablaza routes codes 4-7 straight to this question)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**194.** On a working day, how many MORE hours would you like to work?
+**197.** On a working day, how many MORE hours would you like to work?
 
 > **ENUMERATOR:** Ask only if: wants_more_work = 1, or if job_situation = 8 (Apablaza routes the unemployed-and-seeking category here directly)  
 > Record: whole number
 
-**195.** Across the months when you had no paid work, about how many MONTHS in total were you looking for work?
+**198.** Across the months when you had no paid work, about how many MONTHS in total were you looking for work?
 
 > **ENUMERATOR:** Ask only if: any month in the calendar is 'No paid work', or if job_situation = 8  
 > Record: whole number
 
-**196.** Was your current work the first paid job you ever had?
+**199.** Was your current work the first paid job you ever had?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**197.** Have you completed any college, diploma or university course?
+**200.** Have you completed any college, diploma or university course?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**198.** Are you enrolled in any pension, insurance or social-security scheme? For example, EPFO or PM-SYM pension, or Ayushman Bharat health cover.
+**201.** Are you enrolled in any pension, insurance or social-security scheme? For example, EPFO or PM-SYM pension, or Ayushman Bharat health cover.
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**199.** For more than half of your working day, do you work at very high speed?
+**202.** For more than half of your working day, do you work at very high speed?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**200.** For more than half of your working day, do you work to tight deadlines?
+**203.** For more than half of your working day, do you work to tight deadlines?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**201.** For more than half of your working day, do you not have enough time to finish your tasks?
+**204.** For more than half of your working day, do you not have enough time to finish your tasks?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**202.** For more than half of your working day, do you work in a tiring or painful position?
+**205.** For more than half of your working day, do you work in a tiring or painful position?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**203.** For more than half of your working day, do you carry or move heavy loads?
+**206.** For more than half of your working day, do you carry or move heavy loads?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**204.** For more than half of your working day, do you make the same movements again and again?
+**207.** For more than half of your working day, do you make the same movements again and again?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**205.** For more than half of your working day, are you exposed to loud noise?
+**208.** For more than half of your working day, are you exposed to loud noise?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
 
-**206.** For more than half of your working day, are you exposed to extreme heat or cold?
+**209.** For more than half of your working day, are you exposed to extreme heat or cold?
 
 > **ENUMERATOR:** Ask only if: job_situation is 1, 2 or 3 (currently working)  
 > Options: 0 No · 1 Yes · 97 Don't know
@@ -1049,74 +1064,74 @@ Now a set of questions about the conditions of your work — hours, pay, contrac
 
 Last, I will read out some kinds of work-tasks and ask whether you do them. There is no right or wrong answer — we are trying to understand what skills the work here actually uses.
 
-**207.** Do you load, unload, stack or count goods? 
+**210.** Do you load, unload, stack or count goods? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**208.** Do you drive a motor vehicle? 
+**211.** Do you drive a motor vehicle? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**209.** Do you operate an engine or machine? 
+**212.** Do you operate an engine or machine? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**210.** Do you do electrical or wiring work? 
+**213.** Do you do electrical or wiring work? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**211.** Do you check equipment or the route for safety? 
+**214.** Do you check equipment or the route for safety? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**212.** Do you sell goods or services? 
+**215.** Do you sell goods or services? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**213.** Do you handle cash and payments? 
+**216.** Do you handle cash and payments? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**214.** Do you cook or prepare food or drink? 
+**217.** Do you cook or prepare food or drink? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**215.** Do you serve guests or customers? 
+**218.** Do you serve guests or customers? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**216.** Do you clean rooms or public areas? 
+**219.** Do you clean rooms or public areas? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**217.** Do you guide or explain things to visitors? 
+**220.** Do you guide or explain things to visitors? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**218.** Do you coordinate work by phone, radio or signals? 
+**221.** Do you coordinate work by phone, radio or signals? 
 
 > **ENUMERATOR:** Options: 1 Yes, regularly in my main Yatra work · 2 Not in my main work, but done before elsewhere · 3 Never done
 
-**219.** Have you ever driven a motorcycle or scooter, with or without a licence?
+**222.** Have you ever driven a motorcycle or scooter, with or without a licence?
 
 > **ENUMERATOR:** Ask only if: tk_drive is 1 or 2  
 > Options: 0 No · 1 Yes
 
-**220.** ... a car or jeep?
+**223.** ... a car or jeep?
 
 > **ENUMERATOR:** Ask only if: tk_drive is 1 or 2  
 > Options: 0 No · 1 Yes
 
-**221.** ... a truck or bus?
+**224.** ... a truck or bus?
 
 > **ENUMERATOR:** Ask only if: tk_drive is 1 or 2  
 > Options: 0 No · 1 Yes
 
-**222.** In your work, do you read anything (notes, rate lists, tickets, messages)?
+**225.** In your work, do you read anything (notes, rate lists, tickets, messages)?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes
 
-**223.** In your work, do you work out prices or costs?
+**226.** In your work, do you work out prices or costs?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes
 
@@ -1129,35 +1144,35 @@ Last, I will read out some kinds of work-tasks and ask whether you do them. Ther
 
 
 
-**224.** In the last 12 months, did anyone in your household collect firewood or dead wood from common land or forest near here?
+**227.** In the last 12 months, did anyone in your household collect firewood or dead wood from common land or forest near here?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**225.** In the last 12 months, did anyone in your household cut grass or fodder from common land near here?
+**228.** In the last 12 months, did anyone in your household cut grass or fodder from common land near here?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**226.** In the last 12 months, did anyone in your household collect herbs, mushrooms or wild fruit from the forest?
+**229.** In the last 12 months, did anyone in your household collect herbs, mushrooms or wild fruit from the forest?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**227.** In the last 12 months, did any animal of your household graze on common pasture?
+**230.** In the last 12 months, did any animal of your household graze on common pasture?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**228.** In the last 12 months, has anyone in your household been stopped from using a common forest, pasture or path, or been asked to pay to use it?
+**231.** In the last 12 months, has anyone in your household been stopped from using a common forest, pasture or path, or been asked to pay to use it?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**229.** In the last 12 months, has a common place you used to collect from or graze on been closed because of building, road or ropeway work?
+**232.** In the last 12 months, has a common place you used to collect from or graze on been closed because of building, road or ropeway work?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**230.** On your route or near your worksite, can you use a common water source (spring, tap or stream) without paying?
+**233.** On your route or near your worksite, can you use a common water source (spring, tap or stream) without paying?
 
 > **ENUMERATOR:** Options: 1 Yes, free to use · 2 A source exists but we must pay · 3 No source nearby · 97 Don't know
 
-**231.** In this area, who decides who may use the common land and forest? Ask and code what they name; do not read the list.
+**234.** In this area, who decides who may use the common land and forest? Ask and code what they name; do not read the list.
 
 > **ENUMERATOR:** Options: 1 Village head or panchayat · 2 Forest department · 3 Local committee or community group · 4 Nobody decides; it is open to all · 97 Don't know
 
@@ -1175,4 +1190,4 @@ Is there anything you want to ask me, or anything about your work you think we h
 > **ENUMERATOR:** Record anything volunteered here in the notes field. Check the form is complete before leaving — you cannot come back.
 
 
-_231 questions in all. Generated from dictionary.py — do not edit by hand._
+_234 questions in all. Generated from dictionary.py — do not edit by hand._

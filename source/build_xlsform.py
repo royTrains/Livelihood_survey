@@ -82,6 +82,9 @@ RELEVANT = {
     # route gets its own ropeway question later it needs its own wording and its own gate, not this
     # one widened -- the two proposals are different projects.
     "ropeway_stance": "${site} = 1",
+    "ropeway_expect_work": "${site} = 1",
+    "ropeway_expect_jobs": "${site} = 1",
+    "ropeway_trust": "${site} = 1",
     "land_cultivable_acres": "${land_unit} != 5",
     "n_children_out_school": "${n_children_6_14} > 0",
     "main_income_earner": "${n_earners} > 1",
