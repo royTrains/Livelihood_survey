@@ -465,7 +465,7 @@ SRC_STD = "Standard household-survey item"
 #   form_build stamped from the build id.
 # Listed here rather than flagged on each R() call so the whole set is visible in one place: a
 # question quietly becoming invisible is exactly the change that needs to be easy to audit.
-HIDDEN_ON_FORM = {"enum_id", "site", "consent", "form_build"}
+HIDDEN_ON_FORM = {"enum_id", "site", "consent", "form_build", "obs_sex", "obs_age", "obs_setting", "refusal_reason"}
 
 ROWS = []
 

@@ -47,7 +47,7 @@ HI["consent_script"] = CONSENT_SCRIPT_HI
 OUT = os.path.join(HERE, "Kedarnath_final_kobo.xlsx")
 
 # paradata items dropped in favour of a Kobo-native equivalent (see module docstring)
-DROP_PARADATA = {"resp_id", "interview_date", "interview_duration_min", "dur_tasks_min", "gps_lat", "gps_lon"}
+DROP_PARADATA = {"resp_id", "interview_date", "interview_duration_min", "dur_tasks_min", "gps_lat", "gps_lon", "gps_accuracy_m", "gps_fix_s", "gps_error"}
 
 TYPE_MAP = {"num": "decimal", "count": "integer", "money": "integer"}
 
