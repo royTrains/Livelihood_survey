@@ -206,7 +206,8 @@ async function pushOne(r){
     method: "POST",
     headers: {"Content-Type": "text/plain;charset=utf-8"},
     body: JSON.stringify({ token: c.token, build: CFG.build,
-                           row: { resp_id: r.resp_id, start: r.__start || "", words, codes } })
+                           row: { resp_id: r.resp_id, start: r.__start || "", end: r.__end || "",
+                                  duration_min: durMin(r), words, codes } })
   });
   if (!res.ok) return false;
   let out = null;
@@ -608,7 +609,7 @@ function gpsApply(){
   if (gpsBest){
     D.gps_lat = gpsBest.lat; D.gps_lon = gpsBest.lon;
     D.gps_accuracy_m = String(gpsBest.acc); D.gps_fix_s = String(gpsBest.s);
-    delete D.gps_error;
+    if (gpsBest.acc > 200) D.gps_error = "3"; else delete D.gps_error;
   } else if (gpsErr){
     D.gps_error = gpsErr;
   }
@@ -711,11 +712,16 @@ function labelOf(col, v){
   if (!m || v === undefined || v === null || String(v).trim() === "") return v;
   return String(v).trim().split(/\s+/).map(x => (m[x] ? (L ? m[x].e : m[x].h) : x)).join("; ");
 }
+function durMin(r){
+  const a = Date.parse(r.__start || ""), b = Date.parse(r.__end || "");
+  if (!a || !b || b < a) return "";
+  return Math.round((b - a) / 60000);
+}
 function csvText(kind, rows){
-  const header = ["resp_id", "start"].concat(CFG.cols);
+  const header = ["resp_id", "start", "end", "duration_min"].concat(CFG.cols);
   let out = header.map(csvCell).join(",") + "\n";
   rows.forEach(r => {
-    const row = [r.resp_id, r.__start || ""];
+    const row = [r.resp_id, r.__start || "", r.__end || "", durMin(r)];
     CFG.cols.forEach(c => row.push(csvCell(kind === "text" ? labelOf(c, r[c]) : (r[c] ?? ""))));
     out += row.join(",") + "\n";
   });

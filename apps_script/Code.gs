@@ -245,12 +245,19 @@ function doPost(e) {
     for (k in meta) w[k] = meta[k];
     w[ID] = id;
     w.__start = String(row.start || "");
+    // The tablet has always stamped __end; nothing on this side read it, so the sheet had no
+    // end time and interview_duration_min was permanently empty -- the 45-minute cap had
+    // never once been measured. Duration is computed on the tablet, where both clocks agree.
+    w.__end = String(row.end || "");
+    w.__duration_min = String(row.duration_min === 0 ? 0 : (row.duration_min || ""));
     for (k in row.words) w[k] = row.words[k] === null || row.words[k] === undefined ? "" : String(row.words[k]);
 
     var cc = {};
     for (k in meta) cc[k] = meta[k];
     cc[ID] = id;
     cc.__start = String(row.start || "");
+    cc.__end = String(row.end || "");
+    cc.__duration_min = String(row.duration_min === 0 ? 0 : (row.duration_min || ""));
     for (k in row.codes) cc[k] = row.codes[k] === null || row.codes[k] === undefined ? "" : String(row.codes[k]);
 
     var r1 = write_(answers, w);
