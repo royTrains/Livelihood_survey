@@ -79,6 +79,8 @@ RELEVANT = {
     # route gets its own ropeway question later it needs its own wording and its own gate, not this
     # one widened -- the two proposals are different projects.
     "ropeway_stance": "${site} = 1",
+    "earnings_range": "${knows_monthly_income} = 0",
+    "years_current_job": "${tenure_under_1} = 0",
     "ropeway_expect_work": "${site} = 1",
     "ropeway_expect_jobs": "${site} = 1",
     "ropeway_trust": "${site} = 1",
@@ -225,7 +227,7 @@ CONSTRAINT = {
     "years_schooling": (". >= 0 and . <= ${age} - 4",
                         "Years of schooling cannot be more than the respondent's age allows."),
     # Nor can Yatra seasons. Ten is the youngest this instrument will record as working.
-    "years_in_yatra_work": (". >= 0 and . <= ${age} - 10",
+    "years_current_job": (". >= 0 and . <= ${age} - 10",
                             "More Yatra seasons than the respondent's age allows."),
     # Extra hours wanted, on top of hours already worked, cannot exceed a day.
     "more_hours_day": (". >= 0 and . + ${hours_day_yatra} <= 18",
