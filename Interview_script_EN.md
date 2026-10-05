@@ -1163,27 +1163,27 @@ Last, I will read out some kinds of work-tasks and ask whether you do them. Ther
 
 
 
-**230.** In the last 12 months, did anyone in your household collect firewood or dead wood from common land or forest near here?
+**230.** In this Yatra season or last Yatra season, did you or anyone staying with you here collect firewood or dead wood from common land or forest in the Yatra region or workplace region?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**231.** In the last 12 months, did anyone in your household cut grass or fodder from common land near here?
+**231.** In this Yatra season or last Yatra season, did you or anyone staying with you here cut grass or fodder from common land in the Yatra region or workplace region?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**232.** In the last 12 months, did anyone in your household collect herbs, mushrooms or wild fruit from the forest?
+**232.** In this Yatra season or last Yatra season, did you or anyone staying with you here collect herbs, mushrooms or wild fruit from the forest in the Yatra region or workplace region?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**233.** In the last 12 months, did any animal of your household graze on common pasture?
+**233.** In this Yatra season or last Yatra season, did any animal of yours or of anyone staying with you here graze on common pasture in the Yatra region or workplace region?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**234.** In the last 12 months, has anyone in your household been stopped from using a common forest, pasture or path, or been asked to pay to use it?
+**234.** In this Yatra season or last Yatra season, has anyone you or someone staying with you here been stopped from using a common forest, pasture or path, or been asked to pay to use it, in the Yatra region or workplace region?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
-**235.** In the last 12 months, has a common place you used to collect from or graze on been closed because of building, road or ropeway work?
+**235.** In this Yatra season or last Yatra season, has a common place you used to collect from or graze on been closed, because of a landslide, flood, road or bridge damage, or construction work, in the Yatra region or workplace region?
 
 > **ENUMERATOR:** Options: 0 No · 1 Yes · 97 Don't know
 
@@ -1191,7 +1191,7 @@ Last, I will read out some kinds of work-tasks and ask whether you do them. Ther
 
 > **ENUMERATOR:** Options: 1 Yes, free to use · 2 A source exists but we must pay · 3 No source nearby · 97 Don't know
 
-**237.** In this area, who decides who may use the common land and forest? Ask and code what they name; do not read the list.
+**237.** In the Yatra region or workplace region, who decides who may use the common land and forest? Ask and code what they name; do not read the list.
 
 > **ENUMERATOR:** Options: 1 Village head or panchayat · 2 Forest department · 3 Local committee or community group · 4 Nobody decides; it is open to all · 97 Don't know
 
