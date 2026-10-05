@@ -80,6 +80,7 @@ RELEVANT = {
     # one widened -- the two proposals are different projects.
     "ropeway_stance": "${site} = 1",
     "earnings_range": "${knows_monthly_income} = 0",
+    "wage_employer": "${employment_type} = 3 or ${employment_type} = 4",
     "years_current_job": "${tenure_under_1} = 0",
     "ropeway_expect_work": "${site} = 1",
     "ropeway_expect_jobs": "${site} = 1",
