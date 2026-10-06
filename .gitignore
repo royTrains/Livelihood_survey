@@ -1,0 +1,11 @@
+
+# Holds the Apps Script /exec URL and token for the build. Kept out of git by the
+# project convention this repo inherited -- but NOTE: a clone without it builds a form
+# that says "not connected to the sheet" and keeps interviews on the tablet, which is
+# exactly what happened on 2026-10-05. If you clone this repo to rebuild, create it
+# first: {"url": "<the /exec URL>", "token": "<TOKEN or empty>"} in source/.
+source/sync_config.json
+source/__pycache__/
+source/*.xlsx
+source/*.pdf
+source/*.md
