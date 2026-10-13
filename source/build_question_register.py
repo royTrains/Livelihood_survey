@@ -39,6 +39,28 @@ def opts(r, hindi=False):
     return " | ".join(f"{k} {v}" for k, v in src.items())
 
 
+def opts_short(r, maxn=6):
+    """Same as opts(), but caps long lists so the PDF table does not sprawl. The full list
+    stays in the xlsx (opts()), it is just not spelled out question by question in the PDF."""
+    if not r["lset"]:
+        return ""
+    items = list(LSETS[r["lset"]].items())
+    shown = " | ".join(f"{k} {v}" for k, v in items[:maxn])
+    if len(items) > maxn:
+        shown += f" | ... (+{len(items) - maxn} more)"
+    return shown
+
+
+def source_short(src):
+    """First clause of a citation, for the PDF table; the xlsx keeps the full source text."""
+    src = str(src or "")
+    for sep in (";", " -- ", ", Appendix", ", Section", ", Table", ", Q"):
+        if sep in src:
+            src = src.split(sep, 1)[0]
+            break
+    return src.strip()
+
+
 # ============================================================ EXCEL
 wb = openpyxl.Workbook()
 HEAD = Font(bold=True, color="FFFFFF", size=10)
@@ -153,24 +175,19 @@ for code, title in MODULES:
         q = "\\footnotesize " + esc(r["question"])
         if HI.get(r["name"]):
             q += "\\par\\vspace{1pt}{\\footnotesize\\color{hdr}" + hi(HI[r["name"]]) + "}"
-        o = "\\scriptsize " + (esc(opts(r)) if r["lset"] else "")
+        o = "\\scriptsize " + (esc(opts_short(r)) if r["lset"] else "")
         if r["skip"]:
             o += ("\\par\\vspace{1pt}\\textit{Asked only if: " + esc(r["skip"]) + "}") if r["lset"] else \
                  ("\\textit{Asked only if: " + esc(r["skip"]) + "}")
         tex += (f"\\footnotesize {i} & \\footnotesize\\texttt{{" + esc(r["name"]) + "} & \\scriptsize "
                 + esc(TYPE.get(r["kind"], r["kind"])) + " & " + q + " & " + o
-                + " & \\scriptsize " + esc(r["source"]) + "\\\\\n")
+                + " & \\scriptsize " + esc(source_short(r["source"])) + "\\\\\n")
     tex += "\\bottomrule\\end{longtable}\\vspace{6pt}\n"
 
-tex += r"""\clearpage\noindent{\large\bfseries\color{hdr} Sources, and what each one contributed}\\[4pt]
-\begin{longtable}{@{}p{9.5cm}p{1.2cm}p{12.5cm}@{}}
-\toprule \footnotesize\textbf{Source} & \footnotesize\textbf{Items} & \footnotesize\textbf{Variables}\\ \midrule
-\endhead
-"""
-for k, v in sorted(lit.items(), key=lambda x: -len(x[1])):
-    tex += ("\\scriptsize " + esc(k) + " & \\scriptsize " + str(len(v)) + " & \\scriptsize\\texttt{"
-            + esc(", ".join(v)) + "}\\\\\n")
-tex += "\\bottomrule\\end{longtable}\n\\end{document}\n"
+tex += "\\end{document}\n"
+# The source-by-source cross-reference (which variables draw on which literature) is left out of the
+# PDF on purpose: it is an audit appendix, not something a reader needs question by question, and it
+# was most of what made the PDF long. It is not lost -- it is the xlsx "Literature" sheet above.
 
 tp = os.path.join(HERE, "Question_register.tex")
 open(tp, "w", encoding="utf-8").write(tex)
